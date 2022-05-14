@@ -20,7 +20,7 @@ Future<http.Response> postToxicResponse() async {
   final response = await http.post(
     uri,
     headers: {'Content-type': 'application/json'},
-    body: jsonEncode({'variables': identifier}),
+    body: jsonEncode({'deviceId': identifier}),
   );
 
   return response;
