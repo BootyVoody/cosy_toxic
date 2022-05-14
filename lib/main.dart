@@ -1,6 +1,6 @@
+import 'package:cosy_toxicity/api/post_toxic_request.dart';
 import 'package:cosy_toxicity/business/state/average_toxic.dart';
 import 'package:cosy_toxicity/business/state/average_toxic_state.dart';
-import 'package:cosy_toxicity/services/toxicity_level_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cosy Toxicity',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: const MyHomePage(title: 'Уровень токсичности CosySoft'),
     );
@@ -33,9 +33,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final ToxicityLevelService _toxicityLevelService =
-      const ToxicityLevelService();
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -47,10 +44,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           body: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.access_alarm),
-                Text(state.averageLevel.toString()),
+                Expanded(
+                  flex: 6,
+                  child: _displayToxicLevel(state.averageLevel),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    _displayToxicText(state.averageLevel),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -58,20 +67,52 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FloatingActionButton(
-                onPressed: () {
-                  _toxicityLevelService.getToxicityLevel();
-                },
+                onPressed: () => context.read<AverageToxicCubit>().reloadData(),
                 child: const Icon(Icons.replay_outlined),
               ),
               const SizedBox(width: 10),
               FloatingActionButton(
-                onPressed: () => context.read<AverageToxicCubit>(),
-                child: const Icon(Icons.add),
+                onPressed: () => postToxicResponse(),
+                child: const Icon(Icons.warning),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _displayToxicLevel(int? averageLevel) {
+    switch (averageLevel) {
+      case 0:
+        return Image.asset('assets/images/1.png');
+      case 1:
+        return Image.asset('assets/images/2.png');
+      case 2:
+        return Image.asset('assets/images/3.png');
+      case 3:
+        return Image.asset('assets/images/4.png');
+      case 4:
+        return Image.asset('assets/images/5.png');
+      default:
+        return const CircularProgressIndicator();
+    }
+  }
+
+  String _displayToxicText(int? averageLevel) {
+    switch (averageLevel) {
+      case 0:
+        return 'Умеренный уровень токсичности';
+      case 1:
+        return 'Уровень токсичности #НЕСТАСЯ';
+      case 2:
+        return 'Уровень токсичности #ПОКАЕЩЁНЕСТАСЯ';
+      case 3:
+        return 'Уровень токсичности #ПОЧТИСТАСЯ';
+      case 4:
+        return 'Теперь наш офис - СТАСЯ';
+      default:
+        return '';
+    }
   }
 }

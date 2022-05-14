@@ -1,11 +1,11 @@
 class AverageToxicState {
-  final int averageLevel;
+  final int? averageLevel;
 
   AverageToxicState._({
-    required this.averageLevel,
+    this.averageLevel,
   });
 
-  factory AverageToxicState.initial() => AverageToxicState._(averageLevel: 0);
+  factory AverageToxicState.initial() => AverageToxicState._();
 
   AverageToxicState copyWith({int? averageLevel}) => AverageToxicState._(
         averageLevel: averageLevel ?? this.averageLevel,
