@@ -95,7 +95,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 4:
         return Image.asset('assets/images/5.png');
       default:
-        return const CircularProgressIndicator();
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
     }
   }
 
